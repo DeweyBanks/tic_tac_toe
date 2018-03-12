@@ -1,6 +1,7 @@
 module TicTacToe
   class Board
     attr_reader :grid
+
     def initialize(input = {})
       @grid = calculate_grid(input[:grid])
     end
@@ -40,25 +41,34 @@ module TicTacToe
     end
 
     def draw?
+      # get an array of cell values and check if any are not set.
+      # return true if each cell has a value
       grid.flatten.map { |cell| cell.value }.none_empty?
     end
 
     def winner?
+      # winning_positions collects the grid values, the column values, and the diagnal values
+
       winning_positions.each do |winning_position|
+        # skip to the next one if each cell is empty
         next if winning_position_values(winning_position).all_empty?
+        # return true if each cell has a matching value
         return true if winning_position_values(winning_position).all_same?
       end
+      # return false if no winning position was found
       false
     end
 
     def winning_position_values(winning_position)
+      # return an array containing each cell's value
       winning_position.map { |cell| cell.value }
     end
 
     def winning_positions
-      grid +
-      grid.transpose +
-      diagonals
+      # return an array of each possible winning combination
+      # currently hard coded for a grid of 3x3
+      # you can win by hitting 3 rows, 3 columns, or on a diagonal
+      grid + grid.transpose + diagonals
     end
 
     def diagonals
