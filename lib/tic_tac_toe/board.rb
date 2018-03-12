@@ -21,6 +21,8 @@ module TicTacToe
     end
 
     def formatted_grid
+      #TODO add color to cell values x = read o = blue
+      # displays the grid
       grid.each do |row|
         puts row.map { |cell| cell.value.empty? ? "_" : cell.value }.join(" ")
       end
