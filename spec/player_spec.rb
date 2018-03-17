@@ -1,3 +1,4 @@
+require_relative '../lib/tic_tac_toe/player'
 require "spec_helper"
 
 module TicTacToe

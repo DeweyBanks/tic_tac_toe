@@ -5,7 +5,6 @@ module TicTacToe
     def initialize(players, board = Board.new)
       @players = players
       @board = board
-      @mapping = set_mapping(@board.grid)
       @current_player, @other_player = players.shuffle
     end
 
@@ -13,53 +12,71 @@ module TicTacToe
       @current_player, @other_player = @other_player, @current_player
     end
 
-    def solicit_move
-      print_hello
+    def get_move_option
       puts "#{current_player.name}: Enter a number between 1 and 9 to make your move"
-      if current_player.ai == true
-        human_move = ["1", "2", "3", "4", "5", "6", "7", "8", "9"].sample
+      if current_player.ai
+        move_option = get_ai_move
       else
-        human_move = gets.chomp![0]
+        move_option = gets.chomp![0]
       end
-      while !verify_input_contains_only_integers(human_move)
+      while !verify_input_contains_only_integers(move_option)
        puts "I'm sorry, you must pick a number between 1 and 9. Please try again."
-        human_move = gets.chomp![0]
+        move_option = gets.chomp![0]
       end
-      return human_move
-    end
-
-    def get_move(human_move)
-      human_move_to_coordinate(human_move)
+      return move_option
     end
 
     def valid_move?(x,y)
       board.get_cell(x,y).value.empty?
     end
 
-    def game_over_message
-      return "#{current_player.name} won!" if board.game_over == :winner
-      return "The game ended in a tie" if board.game_over == :draw
+    def game_over
+      return print_winner_message if board.game_over == :winner
+      return print_tie_message if board.game_over == :draw
+    end
+
+    def get_ai_move
+      sleep 2
+      possible_moves = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+      ai_move_option = possible_moves.sample
+      move = set_move(ai_move_option)
+      unless move[:valid]
+        begin
+          ai_move_option = possible_moves.sample
+          move = set_move(ai_move_option)
+          possible_moves.delete(ai_move_option)
+        end while move[:valid] != true
+      end
+     return ai_move_option
+    end
+
+    def set_move(move_option)
+      x, y = move_to_coordinate(move_option)
+      return {
+        valid: valid_move?(x, y),
+        x: x,
+        y: y
+      }
     end
 
     def play
+      sleep 2
       puts "#{current_player.name} has randomly been selected as the first player"
       while true
         board.formatted_grid
-        human_move = solicit_move
-        x, y = get_move(human_move)
-        move_valid = valid_move?(x,y)
-        unless move_valid
+        move_option = get_move_option
+        move = set_move(move_option)
+        unless move[:valid]
           begin
-            puts "ERROR: NOT A VALID MOVE\n"
-            human_move = solicit_move
-            x, y = get_move(human_move)
-            move_valid = valid_move?(x,y)
-          end while move_valid != true
+            puts "ERROR: MOVE TAKEN. Please choose again\n"
+            move_option = get_move_option
+            move = set_move(move_option)
+          end while move[:valid] != true
         end
-        board.set_cell(x, y, current_player.token)
-
+        board.set_cell(move[:x], move[:y], current_player.token)
         if board.game_over
-          puts game_over_message
+          clear_display
+          game_over
           board.formatted_grid
           puts "\n Would you like to play again? (y/n)"
           answer = gets.chomp![0].downcase
@@ -72,26 +89,7 @@ module TicTacToe
 
     private
 
-    def set_mapping(grid)
-      # TODO set mapping based on grid size
-      # mapping = {}
-      # mapping_array = []
-      # cnt = 0
-      # grid.each_with_index do |row, index|
-      #   row.map.with_index(1) do |cell, index|
-      #     r = {
-      #       index.to_s => [cnt, index]
-      #     }
-      #    mapping_array << r
-      #     cnt += 1
-      #   end
-      # end
-
-
-      # return mapping
-    end
-
-    def human_move_to_coordinate(human_move)
+    def move_to_coordinate(move_option)
       mapping = {
         "1" => [0, 0],
         "2" => [1, 0],
@@ -103,7 +101,7 @@ module TicTacToe
         "8" => [1, 2],
         "9" => [2, 2]
       }
-      mapping[human_move]
+      mapping[move_option]
     end
 
   end
