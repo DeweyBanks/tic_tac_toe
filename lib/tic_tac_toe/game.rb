@@ -14,6 +14,7 @@ module TicTacToe
     end
 
     def solicit_move
+      print_hello
       puts "#{current_player.name}: Enter a number between 1 and 9 to make your move"
       if current_player.ai == true
         human_move = ["1", "2", "3", "4", "5", "6", "7", "8", "9"].sample

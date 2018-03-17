@@ -3,9 +3,9 @@ root = File.expand_path("../", File.dirname(__FILE__))
 require 'pry'
 require "#{root}/lib/tic_tac_toe.rb"
 require_relative('../data/computer_players')
-require_relative('../helpers/input_helpers')
 
 
+binding.pry
 def player_setup(options)
   TicTacToe::Player.new(options)
 end
@@ -27,7 +27,7 @@ while answer == "y"
   if am_i_playing == "y"
     ai_name = COMPUTER_PLAYERS.sample[:name]
     puts "Nice!! my name is #{ai_name}.\n\n"
-    puts "Are you player 1('X') or player 2('O')? (1/2)\n\n"
+    puts "#{player_name}, are you player 1('X') or player 2('O')? (1/2)\n\n"
     player_number = gets.chomp!
     if player_number == "X" || player_number == "1"
      player_1 = player_setup({name: player_name, token: "X"})
@@ -40,7 +40,7 @@ while answer == "y"
     puts "Oh . . .you have a friend . . . what's their name?\n\n"
     other_human_name = gets.chomp!
     puts "so #{player_name} vs #{other_human_name}."
-    puts "Are you player 1('X') or player 2('O')? (1/2)\n\n"
+    puts "#{player_name}, are you player 1('X') or player 2('O')? (1/2)\n\n"
     player_number = gets.chomp!
      if player_number == "X" || player_number == "1"
      player_1 = player_setup({name: player_name, token: "X"})
