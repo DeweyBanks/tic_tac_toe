@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email                  = ["deweybanks@gmail.com"]
   spec.summary                = %q{A fun command line game of tic tac toe!}
   spec.description            = %q{A simple game of tic tac toe to be played by 1 or two players with a varying grid size.}
-  spec.homepage               = "http://domainforproject.com/"
+  spec.homepage               = "https://github.com/DeweyBanks/tic_tac_toe"
   spec.license                = "MIT"
 
   spec.files         = ['lib/*.rb']
